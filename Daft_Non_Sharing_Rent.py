@@ -31,7 +31,6 @@ for i in rent_price_list_ordered:
     else:
         rent_price_master.append(int(i))
 
-print(len(list_of_rent_prices))
 # Remove Outliers Function
 def RemoveOutliers(nums, outlierConstant):
     ary = np.array(nums)
@@ -46,7 +45,6 @@ def RemoveOutliers(nums, outlierConstant):
     return resultList
 
 # Remove Outliers
-
 rent_price = RemoveOutliers(rent_price_master, 1.5)
 
 # Calculate mean and Standard deviation.
@@ -91,7 +89,7 @@ while percent <= 6:
     ylabel.append(str(percent)+'%')
     percent +=1
 
-plt.rcParams['figure.figsize'] = (12, 9)
+plt.rcParams['figure.figsize'] = (12, 10)
 
 # Create plot
 with plt.style.context('fivethirtyeight'):
