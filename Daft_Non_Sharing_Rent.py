@@ -31,6 +31,7 @@ for i in rent_price_list_ordered:
     else:
         rent_price_master.append(int(i))
 
+print(len(list_of_rent_prices))
 # Remove Outliers Function
 def RemoveOutliers(nums, outlierConstant):
     ary = np.array(nums)
@@ -112,20 +113,19 @@ with plt.style.context('fivethirtyeight'):
                 c=colours[3],
                 linestyle="--")
     plt.title('Rent Prices Across All Of The Republic of Ireland \n Total number of places = ' +
-              str(len(rent_price_master)) + ' \n ' + str(date))
+              str(len(rent_price)) + ' \n ' + str(date))
     plt.xticks(xtick,labels=xlabel)
     plt.yticks(ytick,ylabel)
     plt.xlabel('Price of Rent')
     plt.ylabel('Places Available as a Percent %')
     kwargs = {'fontstyle':'italic','fontsize':'x-small'}
     plt.text(x=1, y=-1,
-             s='*Statisical outliers have been removed, prices presented as per month,where price was presented per week the '
-               'formula (Price*52)/12 was used. \n Places where more than one place was availible for rent only 1 place '
-               'was considered.',
+             s='*Statisical outliers have been removed: '+ str(len(list_of_rent_prices)-len(rent_price)) + ''
+                '. Prices presented as per month,where price was presented per week the '
+                'formula (Price*52)/12 was used. \n Places where more than one place was availible for rent only 1 place '
+                'was considered.',
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
-    plt.savefig(fname='Rent Price Histogram.png',format='png',dpi=600)
-plt.show()
-plt.close()
+    plt.savefig(fname='Rent Price Histogram.png',format='png',dpi=100)
 print('Process Complete :)')
