@@ -6,8 +6,11 @@ from scipy.stats import norm
 import datetime
 import seaborn as sb
 
+# Create date for plot
+date = datetime.datetime.now().strftime("%d-%m-%Y")
+
 # Import data
-df = pd.read_csv('test.csv', sep=' ', header=None)
+df = pd.read_csv("Daft_non_shared_renting_" + str(date) +".csv", sep=' ', header=None)
 
 # Convert df to list
 list_of_rent_prices = df.values.tolist()
@@ -24,12 +27,14 @@ rent_price_list_ordered.pop(0)
 
 # Remove ',' and convert to int from str
 rent_price_master = []
+char_removal = [',','(',')',' ']
 for i in rent_price_list_ordered:
     if ',' in i:
-        pass
+        for char in char_removal:
+            i = i.replace(char,'')
+        rent_price_master.append(int(float(i)))
     else:
         rent_price_master.append(int(i))
-
 
 # Remove Outliers Function
 def RemoveOutliers(nums, outlierConstant):
@@ -42,6 +47,8 @@ def RemoveOutliers(nums, outlierConstant):
     for y in ary.tolist():
         if quartileSet[0] <= y <= quartileSet[1]:
             resultList.append(y)
+        else:
+            pass
     return resultList
 
 
@@ -69,9 +76,6 @@ probabilities = [dist.pdf(value) for value in values]
 # Colours for plot styling
 colours = ['#00589C', '#016FC4', '#1891C3', "#3AC0DA", '#3DC6C3', '#50E3C2']
 
-# Create date for plot
-date = datetime.datetime.now().strftime("%d-%m-%Y")
-
 # Labeling X axis
 xtick = []
 xlabel = []
@@ -85,7 +89,7 @@ while number <= 5500:
 ytick = []
 ylabel = []
 percent = 0
-while percent <= 6:
+while percent <= 10:
     ytick.append(percent)
     ylabel.append(str(percent) + '%')
     percent += 1
@@ -118,7 +122,7 @@ with plt.style.context('fivethirtyeight'):
     plt.xlabel('Price of Rent')
     plt.ylabel('Places Available as a Percent %')
     kwargs = {'fontstyle': 'italic', 'fontsize': 'x-small'}
-    plt.text(x=1, y=-1,
+    plt.text(x=1, y=-1.5,
              s='*Statistical outliers have been removed: ' + str(len(list_of_rent_prices) - len(rent_price)) + ''
               '. Prices presented as per month,where price was presented per week the '
               'formula (Price*52)/12 was used. \n Places where more than one place was available for rent only 1 place '
@@ -126,5 +130,5 @@ with plt.style.context('fivethirtyeight'):
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
-    plt.savefig(fname='Rent Price Histogram.png', format='png', dpi=100)
+    plt.savefig(fname='Rent_Price_Histogram_' + str(date)+'.png', format='png', dpi=100)
 print('Process Complete :)')
