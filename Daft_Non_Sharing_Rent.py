@@ -6,7 +6,6 @@ from scipy.stats import norm
 import datetime
 import seaborn as sb
 
-
 # Import data
 df = pd.read_csv('test.csv', sep=' ', header=None)
 
@@ -31,6 +30,7 @@ for i in rent_price_list_ordered:
     else:
         rent_price_master.append(int(i))
 
+
 # Remove Outliers Function
 def RemoveOutliers(nums, outlierConstant):
     ary = np.array(nums)
@@ -44,6 +44,7 @@ def RemoveOutliers(nums, outlierConstant):
             resultList.append(y)
     return resultList
 
+
 # Remove Outliers
 rent_price = RemoveOutliers(rent_price_master, 1.5)
 
@@ -51,7 +52,7 @@ rent_price = RemoveOutliers(rent_price_master, 1.5)
 mean = np.mean(rent_price)
 sd = np.std(rent_price)
 
-# Create comparible sample
+# Create comparable sample
 sample = normal(loc=2280, scale=990, size=len(rent_price))
 sample = abs(sample)
 sample_mean = np.mean(sample)
@@ -61,7 +62,7 @@ sample.sort()
 # Find distance
 dist = norm(sample_mean, samples_sd)
 
-# Create Probablity Curve
+# Create Probability Curve
 values = [value for value in range(int(min(sample)), int(max(sample)))]
 probabilities = [dist.pdf(value) for value in values]
 
@@ -75,9 +76,9 @@ date = datetime.datetime.now().strftime("%d-%m-%Y")
 xtick = []
 xlabel = []
 number = 0
-while number <=5500:
+while number <= 5500:
     xtick.append(number)
-    xlabel.append('€'+str(number))
+    xlabel.append('€' + str(number))
     number += 500
 
 # labeling Y axis
@@ -86,23 +87,23 @@ ylabel = []
 percent = 0
 while percent <= 6:
     ytick.append(percent)
-    ylabel.append(str(percent)+'%')
-    percent +=1
+    ylabel.append(str(percent) + '%')
+    percent += 1
 
-plt.rcParams['figure.figsize'] = (12, 10)
+# Create and style plot
+plt.rcParams['figure.figsize'] = (15, 8)
 
-# Create plot
 with plt.style.context('fivethirtyeight'):
     ax = sb.histplot(rent_price,
-                bins=50,
-                color=colours[0],
-                stat='percent',
-                kde=True,
-                edgecolor=colours[1],
-                linewidth=1,)
+                     bins=50,
+                     color=colours[0],
+                     stat='percent',
+                     kde=True,
+                     edgecolor=colours[1],
+                     linewidth=1, )
     ax.lines[0].set_color(colours[4])
     ax.lines[0].set_linestyle('dashdot')
-    ax.lines[0].set_label('Kernal Density Estimate')
+    ax.lines[0].set_label('Kernel Density Estimate')
     plt.axvline(round(mean),
                 label='Average rent across ROI = €' + str(round(mean)),
                 c=colours[2],
@@ -112,18 +113,18 @@ with plt.style.context('fivethirtyeight'):
                 linestyle="--")
     plt.title('Rent Prices Across All Of The Republic of Ireland \n Total number of places = ' +
               str(len(rent_price)) + ' \n ' + str(date))
-    plt.xticks(xtick,labels=xlabel)
-    plt.yticks(ytick,ylabel)
+    plt.xticks(xtick, labels=xlabel)
+    plt.yticks(ytick, ylabel)
     plt.xlabel('Price of Rent')
     plt.ylabel('Places Available as a Percent %')
-    kwargs = {'fontstyle':'italic','fontsize':'x-small'}
+    kwargs = {'fontstyle': 'italic', 'fontsize': 'x-small'}
     plt.text(x=1, y=-1,
-             s='*Statisical outliers have been removed: '+ str(len(list_of_rent_prices)-len(rent_price)) + ''
-                '. Prices presented as per month,where price was presented per week the '
-                'formula (Price*52)/12 was used. \n Places where more than one place was availible for rent only 1 place '
-                'was considered.',
+             s='*Statistical outliers have been removed: ' + str(len(list_of_rent_prices) - len(rent_price)) + ''
+              '. Prices presented as per month,where price was presented per week the '
+              'formula (Price*52)/12 was used. \n Places where more than one place was available for rent only 1 place '
+              'was considered.',
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
-    plt.savefig(fname='Rent Price Histogram.png',format='png',dpi=100)
+    plt.savefig(fname='Rent Price Histogram.png', format='png', dpi=100)
 print('Process Complete :)')
