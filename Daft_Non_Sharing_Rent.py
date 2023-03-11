@@ -90,7 +90,8 @@ while percent <= 6:
     ylabel.append(str(percent)+'%')
     percent +=1
 
-print(xtick,xlabel,ytick,ylabel)
+plt.rcParams['figure.figsize'] = (20, 10)
+
 # Create plot
 with plt.style.context('fivethirtyeight'):
     ax = sb.histplot(rent_price,
@@ -99,7 +100,7 @@ with plt.style.context('fivethirtyeight'):
                 stat='percent',
                 kde=True,
                 edgecolor=colours[1],
-                linewidth=1)
+                linewidth=1,)
     ax.lines[0].set_color(colours[4])
     ax.lines[0].set_linestyle('dashdot')
     ax.lines[0].set_label('Kernal Density Estimate')
@@ -124,5 +125,7 @@ with plt.style.context('fivethirtyeight'):
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
+    plt.savefig(fname='Rent Price Histogram.png',format='png',dpi=600)
 plt.show()
 plt.close()
+print('Process Complete :)')
