@@ -90,7 +90,7 @@ while percent <= 6:
     ylabel.append(str(percent)+'%')
     percent +=1
 
-plt.rcParams['figure.figsize'] = (20, 10)
+plt.rcParams['figure.figsize'] = (12, 9)
 
 # Create plot
 with plt.style.context('fivethirtyeight'):
