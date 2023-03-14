@@ -6,6 +6,9 @@ from scipy.stats import norm
 import datetime
 import seaborn as sb
 
+font_colour = '#000000'
+outline_colour = '#ffffff'
+
 # Create date for plot
 date = datetime.datetime.now().strftime("%d-%m-%Y")
 
@@ -28,13 +31,16 @@ rent_price_list_ordered.pop(0)
 # Remove ',' and convert to int from str
 rent_price_master = []
 char_removal = [',','(',')',' ']
-for i in rent_price_list_ordered:
-    if ',' in i:
-        for char in char_removal:
-            i = i.replace(char,'')
-        rent_price_master.append(int(float(i)))
-    else:
-        rent_price_master.append(int(i))
+try:
+    for i in rent_price_list_ordered:
+        if ',' in i:
+            for char in char_removal:
+                i = i.replace(char,'')
+            rent_price_master.append(int(float(i)))
+        else:
+            rent_price_master.append(int(i))
+except:
+    pass
 
 # Remove Outliers Function
 def RemoveOutliers(nums, outlierConstant):
@@ -54,11 +60,14 @@ def RemoveOutliers(nums, outlierConstant):
 
 # Remove Outliers
 rent_price = RemoveOutliers(rent_price_master, 1.5)
+rent_price.sort()
 
 # Calculate mean and Standard deviation.
 mean = np.mean(rent_price)
 sd = np.std(rent_price)
+f = np.median(rent_price)
 
+print(f)
 # Create comparable sample
 sample = normal(loc=2280, scale=990, size=len(rent_price))
 sample = abs(sample)
@@ -89,25 +98,28 @@ while number <= 5500:
 ytick = []
 ylabel = []
 percent = 0
-while percent <= 10:
+while percent <= 7:
     ytick.append(percent)
     ylabel.append(str(percent) + '%')
     percent += 1
 
 # Create and style plot
 plt.rcParams['figure.figsize'] = (15, 8)
-
-with plt.style.context('fivethirtyeight'):
+plt.rcParams.update({'text.color' : font_colour, 'font.weight':'bold'})
+ww = {'fontweight':'bold'}
+with plt.style.context('seaborn-v0_8-talk'):
     ax = sb.histplot(rent_price,
                      bins=50,
                      color=colours[0],
                      stat='percent',
                      kde=True,
-                     edgecolor=colours[1],
+                     edgecolor=outline_colour,
                      linewidth=1, )
     ax.lines[0].set_color(colours[4])
     ax.lines[0].set_linestyle('dashdot')
     ax.lines[0].set_label('Kernel Density Estimate')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
     plt.axvline(round(mean),
                 label='Average rent across ROI = €' + str(round(mean)),
                 c=colours[2],
@@ -116,13 +128,14 @@ with plt.style.context('fivethirtyeight'):
                 c=colours[3],
                 linestyle="--")
     plt.title('Rent Prices Across All Of The Republic of Ireland \n Total number of places = ' +
-              str(len(rent_price)) + ' \n ' + str(date))
+              str(len(rent_price)) + ' \n ' + str(date), ww)
     plt.xticks(xtick, labels=xlabel)
     plt.yticks(ytick, ylabel)
     plt.xlabel('Price of Rent')
+
     plt.ylabel('Places Available as a Percent %')
     kwargs = {'fontstyle': 'italic', 'fontsize': 'x-small'}
-    plt.text(x=1, y=-1.5,
+    plt.text(x=1, y=-1.1,
              s='*Statistical outliers have been removed: ' + str(len(list_of_rent_prices) - len(rent_price)) + ''
               '. Prices presented as per month,where price was presented per week the '
               'formula (Price*52)/12 was used. \n Places where more than one place was available for rent only 1 place '
@@ -130,5 +143,5 @@ with plt.style.context('fivethirtyeight'):
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
-    plt.savefig(fname='Rent_Price_Histogram_' + str(date)+'.png', format='png', dpi=100)
+    plt.savefig(fname='Rent_Price_Histogram_' + str(date)+'.png', format='png', dpi=400)
 print('Process Complete :)')
