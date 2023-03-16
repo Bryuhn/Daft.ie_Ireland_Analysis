@@ -2,7 +2,6 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import datetime
-import pprint as pp
 
 # Get date
 date = datetime.datetime.now().strftime("%d-%m-%Y")
@@ -16,7 +15,7 @@ rent_price_list = []
 
 #  Create Dict for types
 rents = {'House': 0, 'Apartment': 0, 'Studio':0}
-removal_characters = ('€', ',')
+removal_characters = ('£', '€', ',')
 
 #  First while statement to catch promo'd ads
 try:
@@ -120,12 +119,15 @@ try:
                 # If not studio
                 elif 'Studio' not in type:
                     try:
+
                         #  Get Price
                         rent_price = listing.find(attrs={'data-testid': 'price'})
                         price = rent_price.text.strip()
+
                         #  Check if rent is per month or per week
                         if 'per month' in price:
                             price = price.split(' ')[0]
+
                             # Convert to int
                             if ',' in price or '€' in price:
                                 for character in removal_characters:
@@ -133,6 +135,7 @@ try:
                                 dic[index].append(price)
                         elif 'per week' in price:
                             price = price.split(' ')[0]
+
                             # Convert to int
                             if ',' in price or '€' in price:
                                 for character in removal_characters:
@@ -149,7 +152,7 @@ try:
                         num_beds = beds.text.strip()
                         dic[index].append(num_beds[:1])
                     except:
-                        dic[index].append('NaN')
+                        pass
 
                     # Add number of bathrooms
                     try:
@@ -165,13 +168,14 @@ try:
 except:
     pass
 
+remove = []
 #  Remove missing data
 for k,v in dic.items():
-    if len(v) != 3:
-        print(v)
-        dic[k].pop()
+    if len(v) != 4:
+        remove.append(k)
+for i in remove:
+    dic.pop(i)
 
-print('nearly there')
 df = pd.DataFrame.from_dict(dic)
 df.to_csv("Daft_rental_data_"+str(date)+'.csv', index=False)
 print('Process Complete :)')

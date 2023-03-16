@@ -143,5 +143,6 @@ with plt.style.context('seaborn-v0_8-talk'):
              **kwargs)
     plt.subplots_adjust(left=0.053, bottom=0.125, right=0.975, top=0.853, wspace=0.19, hspace=0.337)
     plt.legend()
-    plt.savefig(fname='Rent_Price_Histogram_' + str(date)+'.png', format='png', dpi=400)
+    plt.savefig(fname='Onebed' + str(date)+'.png', format='png', dpi=400)
 print('Process Complete :)')
+
