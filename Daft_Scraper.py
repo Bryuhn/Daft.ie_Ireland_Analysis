@@ -13,7 +13,7 @@ dic = {}
 rent_price_list = []
 
 
-#  Create Dict for types
+#  Create Dict for ndf
 rents = {'House': 0, 'Apartment': 0, 'Studio':0}
 removal_characters = ('£', '€', ',')
 
